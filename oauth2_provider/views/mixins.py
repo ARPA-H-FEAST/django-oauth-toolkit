@@ -86,13 +86,9 @@ class OAuthLibMixin:
             not hasattr(cls, "_oauthlib_core")
             or oauth2_settings.ALWAYS_RELOAD_OAUTHLIB_CORE
         ):
-            log.debug(f"Followed branch 1")
             server = cls.get_server()
             core_class = cls.get_oauthlib_backend_class()
-            log.debug(f"===> Server: {server} ||| core_class: {core_class}")
-            log.debug(f"Final core: {core_class(server)}")
             cls._oauthlib_core = core_class(server)
-        log.debug(f"Followed branch 2")
         return cls._oauthlib_core
 
     def validate_authorization_request(self, request):
@@ -127,7 +123,6 @@ class OAuthLibMixin:
 
         :param request: The current django.http.HttpRequest object
         """
-        log.debug("---> ....getting core ... <---")
         core = self.get_oauthlib_core()
         return core.create_token_response(request)
 

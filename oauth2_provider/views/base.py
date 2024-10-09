@@ -310,7 +310,6 @@ class TokenView(OAuthLibMixin, View):
 
     @method_decorator(sensitive_post_parameters("password", "client_secret"))
     def post(self, request, *args, **kwargs):
-        log.debug(f"====> Got request!!! <====")
         url, headers, body, status = self.create_token_response(request)
         if status == 200:
             access_token = json.loads(body).get("access_token")

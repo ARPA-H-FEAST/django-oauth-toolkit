@@ -510,15 +510,8 @@ class OAuth2Validator(RequestValidator):
         )
 
     def validate_code(self, client_id, code, client, request, *args, **kwargs):
-        log.debug("\n\n\n\n")
-        log.debug(f">>>>> VALIDATE_CODE CALLED")
-        log.debug(f"\tCODE: {code} | CLIENT: {client}")
-        log.debug("\n\n\n\n")
         try:
             grant = Grant.objects.get(code=code, application=client)
-            log.debug("\n\n\n\n")
-            log.debug(f">>>>> Found grant {grant}")
-            log.debug("\n\n\n\n")
             if not grant.is_expired():
                 request.scopes = grant.scope.split(" ")
                 request.user = grant.user
@@ -527,16 +520,10 @@ class OAuth2Validator(RequestValidator):
                 if grant.claims:
                     request.claims = json.loads(grant.claims)
                 return True
-            log.debug(f">>>> Grant was expired!")
             return False
 
         except Grant.DoesNotExist as DNE:
-            log.debug("\n\n\n\n")
-            log.debug(f">>>>> Exception {DNE}")
             grants = Grant.objects.all()
-            for idx, g in enumerate(grants):
-                log.debug(f"{idx}: {g} (code {g.code}, application {g.application})")
-            log.debug("\n\n\n\n")
             return False
 
     def validate_grant_type(
